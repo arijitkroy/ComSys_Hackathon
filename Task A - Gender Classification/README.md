@@ -5,7 +5,7 @@
 This repository contains the implementation for **Task A: Gender Classification** — distinguishing male vs female faces using deep learning.
 
 🟡 Trained **from scratch** — no pretrained models used.
-🟡 Achieves strong accuracy with deep CNN + strong data augmentation (Mixup, CutMix).
+🟡 Achieves strong accuracy with deep CNN + strong data augmentation (Mixup).
 
 ---
 
@@ -18,9 +18,9 @@ This repository contains the implementation for **Task A: Gender Classification*
 
   * Random Horizontal Flip
   * Random Rotation
-  * RandomResizedCrop
-  * ColorJitter
-  * **Mixup** and **CutMix**
+  * Random Resized Crop
+  * Color Jitter
+  * Mixup
 
 ---
 
@@ -28,10 +28,10 @@ This repository contains the implementation for **Task A: Gender Classification*
 
 | Metric    | Validation |
 | --------- | ---------- |
-| Accuracy  | 0.8839     |
-| Precision | 0.9298     |
-| Recall    | 0.9271     |
-| F1-Score  | 0.9285     |
+| Accuracy  | 0.9100     |
+| Precision | 0.9446     |
+| Recall    | 0.9446     |
+| F1-Score  | 0.9446     |
 
 ---
 
@@ -132,7 +132,6 @@ You can load this and test new data.
 ## Submission Notes
 
 🟡 Source code documented
-🟡 Pretrained weights included
 🟡 Test script works on folder input
 🟡 Single image prediction also included
 🟡 Results (metrics + plots) included
