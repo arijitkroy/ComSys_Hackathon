@@ -1,7 +1,6 @@
 # Paths
 TRAIN_DIR = "Task_B/train"
 VAL_DIR = "Task_B/val"
-CHECKPOINT_DIR = "./checkpoints"
 BEST_MODEL_PATH = "./best_model.pth"
 
 # Hyperparameters

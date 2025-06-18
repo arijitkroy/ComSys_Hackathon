@@ -51,9 +51,6 @@ def train_model(model, train_dataset, val_dataset, config):
 
         history['train_loss'].append(epoch_loss)
 
-        # Save checkpoint
-        save_checkpoint(model, config, epoch)
-
         # Evaluate
         from eval import evaluate_model
         val_acc, precision, recall, f1 = evaluate_model(model, val_loader, config)
