@@ -14,13 +14,7 @@ This repository contains the implementation for **Task A: Gender Classification*
 * **Architecture**: Deep CNN with 4 conv layers + BatchNorm + Dropout
 * **Optimizer**: AdamW
 * **Scheduler**: ReduceLROnPlateau
-* **Data Augmentation**:
-
-  * Random Horizontal Flip
-  * Random Rotation
-  * Random Resized Crop
-  * Color Jitter
-  * Mixup
+* **Data Augmentation**: Mixup
 
 ---
 
