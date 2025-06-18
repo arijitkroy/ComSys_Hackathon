@@ -54,6 +54,8 @@ See folder: `plots/`
 ├── train.py
 ├── test.py
 ├── predict.py
+├── utils.py
+├── evaluate.py
 ├── model/
 │    └── best_gender_classifier.pth
 ├── plots/
