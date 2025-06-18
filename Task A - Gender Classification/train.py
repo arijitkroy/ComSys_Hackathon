@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from collections import Counter
 from model import GenderCNN
 from dataloader import get_data_loaders
 import config
@@ -9,7 +10,8 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import os
-from utils import mixup_data, cutmix_data, mixup_criterion
+from utils import mixup_data, mixup_criterion
+from sklearn.metrics import f1_score
 
 # Create plot dir
 os.makedirs('plots', exist_ok=True)
@@ -18,14 +20,32 @@ if __name__ == "__main__":
     # --- Setup ---
     device = torch.device(config.DEVICE if torch.cuda.is_available() else 'cpu')
     model = GenderCNN().to(device)
-    criterion = nn.CrossEntropyLoss()
-
-    # Optimizer + Scheduler
-    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE, weight_decay=1e-4)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=3)
 
     # Load data
     train_loader, val_loader = get_data_loaders()
+
+    # Get class counts from train dataset
+    train_dataset = train_loader.dataset  # ImageFolder
+
+    targets = [sample[1] for sample in train_dataset.samples]
+    class_counts = Counter(targets)
+
+    # Sort counts by class index (0 = female, 1 = male)
+    class_counts_list = [class_counts[i] for i in range(len(train_dataset.classes))]
+
+    print(f"Class counts: {class_counts_list}")
+
+    total_samples = sum(class_counts_list)
+
+    # Weight = total_samples / class_count
+    class_weights = torch.FloatTensor([total_samples / c if c > 0 else 0.0 for c in class_counts_list]).to(device)
+
+    # Loss function with class weights
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
+
+    # Optimizer + Scheduler
+    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE, weight_decay=1e-4)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=5)
 
     # --- Track best val acc ---
     best_val_acc = 0.0
@@ -46,12 +66,15 @@ if __name__ == "__main__":
         for images, labels in loop:
             images, labels = images.to(device), labels.to(device)
             
-            # --- Randomly choose Mixup or CutMix ---
+            # --- Mixup ---
             aug_prob = random.random()
-            if aug_prob < 0.5:
-                mixed_images, targets_a, targets_b, lam = mixup_data(images, labels, alpha=0.4)
+
+            if aug_prob < 0.7:  # 70% chance Mixup
+                mixed_images, targets_a, targets_b, lam = mixup_data(images, labels, alpha=0.2)
             else:
-                mixed_images, targets_a, targets_b, lam = cutmix_data(images, labels, alpha=1.0)
+                mixed_images = images
+                targets_a = targets_b = labels
+                lam = 1
             
             optimizer.zero_grad()
             outputs = model(mixed_images)
@@ -76,6 +99,9 @@ if __name__ == "__main__":
         model.eval()
         val_correct = 0
         val_total = 0
+
+        all_preds = []
+        all_labels = []
         
         val_loop = tqdm(val_loader, desc="Validating", leave=False)
         with torch.no_grad():
@@ -85,10 +111,13 @@ if __name__ == "__main__":
                 _, preds = torch.max(outputs, 1)
                 val_correct += (preds == labels).sum().item()
                 val_total += labels.size(0)
+                all_preds.extend(preds.cpu().numpy())
+                all_labels.extend(labels.cpu().numpy())
         
         val_acc = 100 * val_correct / val_total
+        f1 = f1_score(all_labels, all_preds, average='binary')
         
-        print(f"\n[Epoch {epoch+1}/{config.EPOCHS}] Train Acc: {train_acc:.2f}%  Val Acc: {val_acc:.2f}%\n")
+        print(f"\n[Epoch {epoch+1}/{config.EPOCHS}] Train Acc: {train_acc:.2f}%  Val Acc: {val_acc:.2f}%  F1-score: {f1:.4f}\n\n")
         
         # --- Save best model ---
         if val_acc > best_val_acc:

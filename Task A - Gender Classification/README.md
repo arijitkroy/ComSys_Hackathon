@@ -30,10 +30,10 @@ Example (fill with your actual results):
 
 | Metric    | Validation |
 | --------- | ---------- |
-| Accuracy  | 0.9650     |
-| Precision | 0.9642     |
-| Recall    | 0.9680     |
-| F1-Score  | 0.9661     |
+| Accuracy  | 0.8791     |
+| Precision | 0.9320     |
+| Recall    | 0.9184     |
+| F1-Score  | 0.9251     |
 
 ---
 
