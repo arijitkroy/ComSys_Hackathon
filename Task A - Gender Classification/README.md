@@ -26,14 +26,12 @@ This repository contains the implementation for **Task A: Gender Classification*
 
 ## Training & Validation Results
 
-Example (fill with your actual results):
-
 | Metric    | Validation |
 | --------- | ---------- |
-| Accuracy  | 0.8791     |
-| Precision | 0.9320     |
-| Recall    | 0.9184     |
-| F1-Score  | 0.9251     |
+| Accuracy  | 0.8839     |
+| Precision | 0.9298     |
+| Recall    | 0.9271     |
+| F1-Score  | 0.9285     |
 
 ---
 
@@ -56,7 +54,7 @@ See folder: `plots/`
 ├── train.py
 ├── test.py
 ├── predict.py
-├── weights/
+├── model/
 │    └── best_gender_classifier.pth
 ├── plots/
 │    ├── loss.png
@@ -76,7 +74,7 @@ python train.py
 
 Saves:
 
-* Best model: `weights/best_gender_classifier.pth`
+* Best model: `model/best_gender_classifier.pth`
 * Plots: `plots/loss.png`, `plots/accuracy.png`
 
 ---
@@ -85,6 +83,7 @@ Saves:
 
 The test script accepts a **test data path** with same folder structure (`male/`, `female/`)
 Returns: Accuracy, Precision, Recall, F1-score
+Outputs: test_results.csv
 
 ```bash
 python test.py <test_data_folder>
@@ -123,7 +122,7 @@ Prediction: male (98.5%)
 The best model is saved to:
 
 ```text
-weights/best_gender_classifier.pth
+model/best_gender_classifier.pth
 ```
 
 You can load this and test new data.
