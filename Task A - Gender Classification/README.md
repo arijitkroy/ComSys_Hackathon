@@ -22,10 +22,10 @@ This repository contains the implementation for **Task A: Gender Classification*
 
 | Metric    | Validation |
 | --------- | ---------- |
-| Accuracy  | 0.9100     |
-| Precision | 0.9446     |
-| Recall    | 0.9446     |
-| F1-Score  | 0.9446     |
+| Accuracy  | 0.9147     |
+| Precision | 0.9404     |
+| Recall    | 0.9464     |
+| F1-Score  | 0.9434     |
 
 ---
 
