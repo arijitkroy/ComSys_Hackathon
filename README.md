@@ -1,6 +1,6 @@
 ---
 
-# 👥 COMSYS Hackathon-5, 2025: Robust Face Recognition and Gender Classification under Adverse Visual Conditions
+# COMSYS Hackathon-5, 2025: Robust Face Recognition and Gender Classification under Adverse Visual Conditions
 
 This repository contains two deep learning tasks:
 
