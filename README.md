@@ -1,9 +1,9 @@
-## COMSYS Hackathon-5, 2025: Robust Face Recognition and Gender Classification under Adverse Visual Conditions
+## COMSYS Hackathon-5, 2025: Robust Face Matching and Gender Classification under Adverse Visual Conditions
 
 This repository contains two deep learning tasks:
 
-* 🧠 **Task A: Gender Classification** – Classifies face images as male or female.
-* 🧠 **Task B: Face Matching with Distorted Inputs** – Verifies whether a distorted face matches a clean identity.
+* 🧠 **Task A: Gender Classification (Binary Classification)** – Classifies face images as male or female.
+* 🧠 **Task B: Face Matching (Multi-Class Recognition with Distorted Inputs)** – Verifies whether a distorted face matches a clean identity.
 
 ---
 
@@ -15,7 +15,7 @@ This repository contains two deep learning tasks:
 * Incorporates advanced augmentation like **Mixup**.
 * Evaluated on precision, recall, and F1-score.
 
-### 🟦 Task B: Distorted Identity Verification (Face Matching)
+### 🟦 Task B: Face Matching (Multi-Class Recognition with Distorted Inputs)
 
 * Uses a **Siamese Network** to verify if a distorted image belongs to a person.
 * Based on **ResNet18** embeddings and **Contrastive Loss**.
