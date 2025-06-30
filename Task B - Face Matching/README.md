@@ -1,6 +1,6 @@
 ---
 
-## 🧠 Task B - Face Recognition (Multi-class Classification)
+## 🧠 Task B - Distorted Identity Verification
 
 This project implements a **face verification system** that can match distorted or altered face images to their correct identities. Unlike classification, this task focuses on **verifying whether two face images belong to the same person**, even under challenging conditions.
 
