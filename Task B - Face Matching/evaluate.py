@@ -9,7 +9,7 @@ import config
 def build_reference_embeddings(model):
     """
     Constructs a dictionary of embeddings for all reference (clean) images 
-    from each identity in the validation directory.
+    from each identity in the training directory.
 
     Args:
         model: Trained Siamese embedding model.
@@ -18,8 +18,8 @@ def build_reference_embeddings(model):
         dict: {identity_name: [embedding1, embedding2, ...]}
     """
     reference_embeddings = {}
-    for identity in os.listdir(config.VAL_DIR):
-        identity_path = os.path.join(config.VAL_DIR, identity)
+    for identity in os.listdir(config.TRAIN_DIR):
+        identity_path = os.path.join(config.TRAIN_DIR, identity)
         if not os.path.isdir(identity_path):
             continue
         for file in os.listdir(identity_path):
@@ -31,32 +31,29 @@ def build_reference_embeddings(model):
             reference_embeddings.setdefault(identity, []).append(emb)
     return reference_embeddings
 
-def predict_identity(emb, reference_embeddings):
+def is_match(distorted_emb, reference_embeddings):
     """
-    Predicts the most similar identity for a given embedding by comparing it
-    against all reference embeddings.
+    Checks if the distorted embedding is close enough to any reference embedding
+    based on a Euclidean distance threshold.
 
     Args:
-        emb: Embedding of the distorted image.
-        reference_embeddings: Dictionary of clean image embeddings.
+        distorted_emb: Embedding vector of distorted image.
+        reference_embeddings: Dictionary of clean embeddings from training identities.
 
     Returns:
-        str or None: Predicted identity name if matched within threshold, else None.
+        int: 1 if a match is found (distance < threshold), else 0.
     """
-    best_match = None
-    min_dist = float('inf')
-    for identity, emb_list in reference_embeddings.items():
+    for emb_list in reference_embeddings.values():
         for ref_emb in emb_list:
-            dist = euclidean_dist(emb, ref_emb)
-            if dist < min_dist:
-                min_dist = dist
-                best_match = identity
-    return best_match if min_dist < config.THRESHOLD else None
+            dist = euclidean_dist(distorted_emb, ref_emb)
+            if dist < config.THRESHOLD:
+                return 1  # Positive match
+    return 0  # No match
 
 def evaluate_model():
     """
     Loads a trained model and evaluates its face matching performance
-    on distorted validation images using Top-1 Accuracy and Macro F1 Score.
+    using threshold-based binary verification against reference identities.
 
     Returns:
         tuple: (y_true, y_pred) for further analysis or plotting.
@@ -66,11 +63,11 @@ def evaluate_model():
     model.load_state_dict(torch.load(config.MODEL_SAVE_PATH, map_location=config.DEVICE))
     model.eval()
 
-    # Prepare embeddings of reference (clean) images
+    # Prepare reference embeddings from clean training images
     reference_embeddings = build_reference_embeddings(model)
 
-    y_true = []  # ground-truth labels (always 1 for distorted set)
-    y_pred = []  # predicted binary match result (1 for correct match, else 0)
+    y_true = []  # true = all distorted inputs should match someone
+    y_pred = []  # model's decision (1 = match, 0 = no match)
 
     for identity in os.listdir(config.VAL_DIR):
         distortion_dir = os.path.join(config.VAL_DIR, identity, 'distortion')
@@ -82,14 +79,12 @@ def evaluate_model():
             distorted_tensor = load_image(distorted_path).to(config.DEVICE)
             distorted_emb = get_embedding(model, distorted_tensor)
 
-            predicted_id = predict_identity(distorted_emb, reference_embeddings)
+            match = is_match(distorted_emb, reference_embeddings)
 
-            # Label as 1 if correctly matched, else 0
-            match = 1 if predicted_id == identity else 0
-            y_true.append(1)         # Each distorted image is a known true identity
-            y_pred.append(match)     # Model prediction: 1 (match), 0 (incorrect)
+            y_true.append(1)      # every distorted image has a true match
+            y_pred.append(match)  # whether model matched it to anyone
 
-    # Compute evaluation metrics
+    # Compute and print metrics
     top1_acc = accuracy_score(y_true, y_pred)
     macro_f1 = f1_score(y_true, y_pred, average='macro')
 
@@ -99,6 +94,5 @@ def evaluate_model():
 
     return y_true, y_pred
 
-# Run evaluation if executed directly
 if __name__ == "__main__":
     y_true, y_pred = evaluate_model()

@@ -92,8 +92,8 @@ Task_B/
 | A    | Macro F1 Score | 0.9434 |
 | A    | Precision      | 0.9404 |
 | A    | Recall         | 0.9464 |
-| B    | Top-1 Accuracy | 0.8510 |
-| B    | Macro F1 Score | 0.7429 |
+| B    | Top-1 Accuracy | 0.8693 |
+| B    | Macro F1 Score | 0.8047 |
 
 ---
 

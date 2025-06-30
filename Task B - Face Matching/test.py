@@ -54,12 +54,18 @@ for identity in os.listdir(config.TRAIN_DIR):
 # -------------------------------
 
 print(f"\nMatching distorted images from: {user_input_folder}")
-for file in tqdm(os.listdir(user_input_folder), desc="Matching"):
-    distorted_path = os.path.join(user_input_folder, file)
-    if not os.path.isfile(distorted_path):
+distorted_images = []
+for identity in os.listdir(user_input_folder):
+    distortion_dir = os.path.join(user_input_folder, identity, 'distortion')
+    if os.path.exists(distortion_dir):
+        for img in os.listdir(distortion_dir):
+            distorted_images.append(os.path.join(distortion_dir, img))
+
+for img_path in tqdm(distorted_images, desc="Matching"):
+    if not os.path.isfile(img_path):
         continue
 
-    distorted_tensor = load_image(distorted_path).to(config.DEVICE)
+    distorted_tensor = load_image(img_path).to(config.DEVICE)
     distorted_emb = get_embedding(model, distorted_tensor)
 
     matched = False
@@ -69,7 +75,7 @@ for file in tqdm(os.listdir(user_input_folder), desc="Matching"):
         for ref_emb in emb_list:
             dist = euclidean_dist(distorted_emb, ref_emb)
             if dist < config.THRESHOLD:
-                print(f"{file} ➤ MATCHED with {identity} (distance = {dist:.4f})")
+                print(f"{os.path.basename(img_path)} ➤ MATCHED with {identity} (distance = {dist:.4f})")
                 matched = True
                 break
         if matched:
@@ -77,4 +83,4 @@ for file in tqdm(os.listdir(user_input_folder), desc="Matching"):
 
     # If no match is found under the threshold
     if not matched:
-        print(f"{file} ➤ NO MATCH (all distances above threshold)")
+        print(f"{os.path.basename(img_path)} ➤ NO MATCH (all distances above threshold)")

@@ -27,7 +27,7 @@ def plot_metrics():
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
-    plt.savefig("plot/metrics_plot.png")
+    plt.savefig("plots/metrics_plot.png")
     plt.show()
 
 def get_transform():

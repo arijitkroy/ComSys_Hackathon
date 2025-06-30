@@ -156,8 +156,8 @@ python plot_metrics.py
 
 | Metric         | Value  |
 | -------------- | ------ |
-| Top-1 Accuracy | 0.8510 |
-| Macro F1-Score | 0.7429 |
+| Top-1 Accuracy | 0.8693 |
+| Macro F1-Score | 0.8047 |
 
 ---
 

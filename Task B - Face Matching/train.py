@@ -107,8 +107,8 @@ def train_model():
         print(f"Validation ➤ Accuracy: {val_acc:.4f}, Macro F1: {val_f1:.4f}")
 
         # Save accuracy and F1 score history for plotting
-        torch.save(accuracy_history, "accuracy_history.pt")
-        torch.save(f1_history, "f1_history.pt")
+        torch.save(accuracy_history, "plots/accuracy_history.pt")
+        torch.save(f1_history, "plots/f1_history.pt")
 
         # Save model if F1 score improves
         if val_f1 > best_f1:
