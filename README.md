@@ -163,7 +163,11 @@ python test.py Task_B/sample_distorted/
 
 1. Embedding generation for clean and distorted images
 2. Distance calculation using Euclidean distance
-3. Threshold-based decision (e.g., `< 0.7` = match)
+3. Threshold-based decision (e.g., `< 0.3` = match)
+
+---
+
+## 🤖 Download Models: https://drive.google.com/drive/folders/1xFb0cbJIsA0FSbcAoAZRu9ZpZyn6mp2_
 
 ---
 
