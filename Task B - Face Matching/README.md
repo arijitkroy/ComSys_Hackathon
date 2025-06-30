@@ -1,6 +1,4 @@
----
-
-## 🧠 Task B - Distorted Identity Verification
+## 🧠 Task B - Face Matching (Multi-Class Recognition with Distorted Inputs)
 
 This project implements a **face verification system** that can match distorted or altered face images to their correct identities. Unlike classification, this task focuses on **verifying whether two face images belong to the same person**, even under challenging conditions.
 
@@ -46,7 +44,6 @@ Build a **generalizable face embedding model** that:
 ├── train.py                 # Main training script
 ├── evaluate.py              # Computes Top-1 Accuracy & Macro F1
 ├── test.py                  # Command-line script to test custom input
-├── plot_metrics.py          # Plots Accuracy & F1 over epochs
 ├── siamese_model.py         # Siamese network & backbone model
 ├── utils.py                 # Embedding functions, contrastive loss, image loader
 ├── data_loader.py           # Dataset loader for face pairs
@@ -83,7 +80,7 @@ LEARNING_RATE = 1e-4
 MARGIN = 1.0  # for contrastive loss
 
 # Inference
-THRESHOLD = 0.7  # Distance threshold for verification
+THRESHOLD = 0.375  # Distance threshold for verification
 DEVICE = "cuda"  # or "cpu"
 ```
 
@@ -125,16 +122,6 @@ python test.py path/to/distorted_images/
 
 * Runs face matching on custom folder of distorted images
 * Outputs matched identity or "no match" in console
-
----
-
-## 📈 Visualize Metrics
-
-```bash
-python plot_metrics.py
-```
-
-* Plots Accuracy and F1 Score over training epochs from `.pt` files
 
 ---
 
